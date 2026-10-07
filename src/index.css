@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+:root{--bg:#f6f7fb;--band:#e8eaf4;--surface:#fff;--ink:#14161f;--muted:#4b5163;--line:#cdd1e2;--accent:#4f46e5}
+.dark{--bg:#12131c;--band:#1b1d2b;--surface:#242738;--ink:#eceef7;--muted:#a6abc0;--line:#363a52;--accent:#8b85ff}
+@theme{--color-bg:var(--bg);--color-band:var(--band);--color-surface:var(--surface);--color-ink:var(--ink);--color-muted:var(--muted);--color-line:var(--line);--color-accent:var(--accent);--color-footer:#2a1245;
+--font-display:"Bricolage Grotesque",system-ui,sans-serif;--font-sans:"Source Sans 3",system-ui,sans-serif}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans)}
+h1,h2,h3{font-family:var(--font-display);letter-spacing:-.02em}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
