@@ -1,4 +1,4 @@
-# Geotech business site (new codebase)
+# Geotech business site
 1. `npm install`
 2. Copy `.env.example` to `.env`; fill in the Supabase URL and anon key.
 3. Apply `supabase/migrations/0001_init.sql` (Supabase CLI: `supabase db push`).
