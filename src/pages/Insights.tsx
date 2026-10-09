@@ -11,7 +11,7 @@ export function InsightsList() {
 export function InsightPost() {
   const { slug = '' } = useParams(), q = useQuery({ queryKey: ['post', slug], queryFn: () => blogService.get(slug) })
   if (q.isPending) return <p role="status" className="p-10">Loading…</p>
-  if (q.isError) return <p role="alert" className="p-10">Couldn't load this article.</p>
+  if (q.isError) return <p role="alert" className="p-10 text-red-600 dark:text-red-400">{q.error instanceof Error ? q.error.message : 'Could not load this article.'}</p>
   const p = q.data
   if (!p) return <p className="p-10">Article not found. <Link className="underline" to="/insights">All insights</Link></p>
   return (<article className="mx-auto max-w-2xl px-4 py-14"><title>{`${p.title} — Geotech`}</title><meta name="description" content={p.excerpt ?? ''}/>

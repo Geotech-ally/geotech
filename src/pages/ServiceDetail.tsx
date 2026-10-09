@@ -6,7 +6,7 @@ export default function ServiceDetail() {
   const { slug = '' } = useParams()
   const q = useQuery({ queryKey: ['service', slug], queryFn: () => servicesService.getBySlug(slug) })
   if (q.isPending) return <p role="status" className="p-10">Loading…</p>
-  if (q.isError) return <p role="alert" className="p-10">Couldn't load this service.</p>
+  if (q.isError) return <p role="alert" className="p-10 text-red-600 dark:text-red-400">{q.error instanceof Error ? q.error.message : 'Could not load this service.'}</p>
   const s = q.data
   if (!s) return <p className="p-10">This service isn't available. <Link className="underline" to="/services">Browse all services</Link></p>
   return (<article className="mx-auto max-w-3xl px-4 py-14"><title>{`${s.name} — Geotech`}</title><meta name="description" content={s.short_description}/>

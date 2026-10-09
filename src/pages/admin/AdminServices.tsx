@@ -15,6 +15,6 @@ function Row({ s }: { s: AdminService }) {
 export default function AdminServices() {
   const q = useQuery({ queryKey: ['admin-services'], queryFn: adminService.services })
   return (<div className="mt-6"><h1 className="text-3xl font-bold">Services & pricing</h1>
-    {q.isPending && <p role="status" className="mt-4">Loading…</p>}{q.isError && <p role="alert" className="mt-4">Couldn't load services.</p>}
+    {q.isPending && <p role="status" className="mt-4">Loading…</p>}{q.isError && <p role="alert" className="mt-4 text-red-600">{q.error instanceof Error ? q.error.message : 'Could not load services.'}</p>}
     {q.data && <div className="mt-4 overflow-x-auto rounded border border-line bg-surface"><table className="w-full"><thead><tr className="text-left"><th className="p-2">Service</th><th className="p-2">Price (KES)</th><th className="p-2">Type</th><th className="p-2">Active</th><th className="p-2">Featured</th><th className="p-2"/></tr></thead><tbody>{q.data.map(s => <Row key={s.id} s={s}/>)}</tbody></table></div>}</div>)
 }

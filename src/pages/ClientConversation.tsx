@@ -13,7 +13,7 @@ export default function ClientConversation() {
       if (file) {
         const u = await api<{ path: string; token: string }>('upload_url', { token, filename: file.name, size: file.size, type: file.type })
         const up = await supabase.storage.from('attachments').uploadToSignedUrl(u.path, u.token, file)
-        if (up.error) throw new Error('File upload failed. Use a PDF, PNG, JPG, TXT or DOCX file under 5 MB.')
+        if (up.error) throw new Error('File upload failed. Use a PDF, PNG, JPG, TXT, or DOCX file under 5 MB.')
         attachment_path = u.path
       }
       await api('client_send', { token, message: text.trim(), attachment_path })
@@ -21,7 +21,7 @@ export default function ClientConversation() {
     onSuccess: () => { setText(''); setFile(null); qc.invalidateQueries({ queryKey: ['client-conv', token] }) },
   })
   if (q.isPending) return <p role="status" className="p-10">Loading…</p>
-  if (q.isError) return <p role="alert" className="p-10">{q.error.message}</p>
+  if (q.isError) return <p role="alert" className="p-10 text-red-600 dark:text-red-400">{q.error instanceof Error ? q.error.message : 'Could not load this conversation.'}</p>
   return (<div className="mx-auto max-w-2xl px-4 py-14"><title>Your conversation — Geotech</title><h1 className="text-3xl font-bold">{q.data.subject}</h1>
     <p className="mt-1 text-sm text-muted">This page is private to you. Bookmark it to come back.</p>
     <ul className="mt-6 space-y-3">{q.data.messages.map(m => <li key={m.id} className={`rounded p-3 ${m.sender_type === 'admin' ? 'bg-band' : 'border border-line bg-surface'}`}>
@@ -30,7 +30,7 @@ export default function ClientConversation() {
     {q.data.status === 'open' ? <form className="mt-6 grid gap-3" onSubmit={e => { e.preventDefault(); if (text.trim()) send.mutate() }}>
       <label className="font-semibold">Reply<textarea className="mt-1 w-full rounded border border-line bg-surface px-3 py-2" rows={3} value={text} onChange={e => setText(e.target.value)}/></label>
       <label className="font-semibold">Attach a file (optional)<input type="file" accept=".pdf,.png,.jpg,.jpeg,.txt,.docx" className="mt-1 block" onChange={e => setFile(e.target.files?.[0] ?? null)}/></label>
-      {send.isError && <p role="alert" className="text-red-600 dark:text-red-400">{send.error.message}</p>}
+      {send.isError && <p role="alert" className="text-red-600 dark:text-red-400">{send.error instanceof Error ? send.error.message : 'Could not send reply.'}</p>}
       <button disabled={send.isPending} className="cursor-pointer justify-self-start rounded bg-accent px-6 py-2 font-semibold text-white dark:text-[#12131c]">{send.isPending ? 'Sending…' : 'Send reply'}</button></form>
       : <p className="mt-6 text-muted">This conversation is closed. Start a new project inquiry to continue.</p>}</div>)
 }

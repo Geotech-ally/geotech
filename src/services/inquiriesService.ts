@@ -1,10 +1,17 @@
 import { inquirySchema, type InquiryInput } from '../lib/schemas'
-import { api } from '../lib/api'
+import { ApiError, api } from '../lib/api'
+import { z } from 'zod'
+const responseSchema = z.object({ token: z.string().uuid() })
 export const inquiriesService = {
-  /** Returns the private conversation token, or null if the honeypot was filled. */
-  async submit(input: InquiryInput): Promise<string | null> {
-    if (input.website) return null
-    const { website: _hp, ...v } = inquirySchema.parse(input)
-    return (await api<{ token: string }>('submit_inquiry', v)).token
+  /** Returns the validated private conversation token after an atomic submission. */
+  async submit(input: InquiryInput): Promise<string> {
+    const parsed = inquirySchema.safeParse(input)
+    if (!parsed.success) throw new ApiError('Please check the form fields and try again.')
+    if (parsed.data.website) throw new ApiError('We could not submit this inquiry. Please check the form and try again.')
+    const { website: _honeypot, ...payload } = parsed.data
+    const result = await api<unknown>('submit_inquiry', payload)
+    const response = responseSchema.safeParse(result)
+    if (!response.success) throw new ApiError('Your inquiry response was incomplete. Please try submitting again.')
+    return response.data.token
   },
 }
