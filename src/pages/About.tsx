@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { contentService } from '../services/contentService'
 import { toSafeParagraphs } from '../lib/safeText'
+import SEO from '../components/SEO'
+import { ROUTE_METADATA, getOrganizationSchema } from '../lib/seoConfig'
 
 function Section({ title, items, paragraphs }: { title: string; items?: string[]; paragraphs?: string[] }) {
   const hasItems = (items ?? []).filter(Boolean).length > 0
@@ -33,7 +35,17 @@ export default function About() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14">
-      <title>About — {companyName}</title>
+      <SEO
+        title={`About ${companyName} — Geotech`}
+        description={profile?.introduction || ROUTE_METADATA.about.description}
+        canonical={ROUTE_METADATA.about.canonicalPath}
+        keywords={ROUTE_METADATA.about.keywords}
+        schema={getOrganizationSchema()}
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'About', path: '/about' },
+        ]}
+      />
       <h1 className="text-4xl font-bold">About {companyName}</h1>
 
       {p.isPending && <p role="status" className="mt-4 text-muted">Loading company profile…</p>}
@@ -107,4 +119,4 @@ export default function About() {
     </div>
   )
 }
-TS
+

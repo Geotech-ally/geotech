@@ -13,7 +13,8 @@ describe('servicesService public catalogue', () => {
     const c: any = {}
     c.select = vi.fn().mockReturnValue(c)
     c.eq = vi.fn().mockReturnValue(c)
-    c.order = vi.fn().mockImplementation(() => result) // awaited
+    c.order = vi.fn().mockReturnValue(c)
+    Object.defineProperty(c, 'then', { value: (resolve: (v: unknown) => unknown) => resolve(result) })
     mocks.from.mockReturnValue(c)
 
     await expect(servicesService.list()).resolves.toEqual(result.data)

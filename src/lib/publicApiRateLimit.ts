@@ -133,7 +133,9 @@ export function isValidIp(value: string) {
 
 export function normalizeIpCandidate(raw: string | null | undefined): string | null {
   if (!isNonEmptyString(raw)) return null
-  const v = stripIpNoise(raw)
+  if (/[\r\n]/.test(raw)) return null
+  const first = raw.includes(',') ? raw.split(',')[0].trim() : raw
+  const v = stripIpNoise(first)
   return isValidIp(v) ? v.slice(0, 64).toLowerCase() : null
 }
 

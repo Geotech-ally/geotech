@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../lib/api'
 import { supabase } from '../lib/supabase'
+import SEO from '../components/SEO'
 interface Conv { subject: string; status: string; messages: { id: string; sender_type: 'client' | 'admin'; message: string; created_at: string; attachment_url: string | null }[] }
 export default function ClientConversation() {
   const { token = '' } = useParams(), qc = useQueryClient(), [text, setText] = useState(''), [file, setFile] = useState<File | null>(null)
@@ -20,9 +21,12 @@ export default function ClientConversation() {
     },
     onSuccess: () => { setText(''); setFile(null); qc.invalidateQueries({ queryKey: ['client-conv', token] }) },
   })
-  if (q.isPending) return <p role="status" className="p-10">Loading…</p>
-  if (q.isError) return <p role="alert" className="p-10 text-red-600 dark:text-red-400">{q.error instanceof Error ? q.error.message : 'Could not load this conversation.'}</p>
-  return (<div className="mx-auto max-w-2xl px-4 py-14"><title>Your conversation — Geotech</title><h1 className="text-3xl font-bold">{q.data.subject}</h1>
+  if (q.isPending) return <><SEO title="Loading Conversation — Geotech" noindex /><p role="status" className="p-10">Loading…</p></>
+  if (q.isError) return <><SEO title="Conversation Error — Geotech" noindex /><p role="alert" className="p-10 text-red-600 dark:text-red-400">{q.error instanceof Error ? q.error.message : 'Could not load this conversation.'}</p></>
+  return (
+    <div className="mx-auto max-w-2xl px-4 py-14">
+      <SEO title={`Conversation: ${q.data.subject} — Geotech`} noindex />
+      <h1 className="text-3xl font-bold">{q.data.subject}</h1>
     <p className="mt-1 text-sm text-muted">This page is private to you. Bookmark it to come back.</p>
     <ul className="mt-6 space-y-3">{q.data.messages.map(m => <li key={m.id} className={`rounded p-3 ${m.sender_type === 'admin' ? 'bg-band' : 'border border-line bg-surface'}`}>
       <span className="text-xs text-muted">{m.sender_type === 'admin' ? 'Geotech' : 'You'} · {new Date(m.created_at).toLocaleString()}</span><p className="whitespace-pre-wrap">{m.message}</p>

@@ -90,10 +90,13 @@ function escapeIlike(value: string) {
 
 function normalizeDateBound(value: string | undefined, endOfDay: boolean) {
   if (!value) return undefined
-  const d = new Date(value)
+  const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value.trim())
+  const d = isDateOnly ? new Date(`${value.trim()}T${endOfDay ? '23:59:59.999Z' : '00:00:00.000Z'}`) : new Date(value)
   if (Number.isNaN(d.getTime())) return undefined
-  if (endOfDay) d.setHours(23, 59, 59, 999)
-  else d.setHours(0, 0, 0, 0)
+  if (!isDateOnly) {
+    if (endOfDay) d.setUTCHours(23, 59, 59, 999)
+    else d.setUTCHours(0, 0, 0, 0)
+  }
   return d.toISOString()
 }
 

@@ -3,10 +3,19 @@ import { useQuery } from '@tanstack/react-query'
 import { servicesService } from '../services/servicesService'
 import ServiceCard from '../components/ServiceCard'
 import Async from '../components/Async'
+import SEO from '../components/SEO'
+import { ROUTE_METADATA, getProfessionalServiceSchema } from '../lib/seoConfig'
 const steps = ['Discovery','Planning','Development','Testing','Deployment','Support']
 export default function Home() {
   const q = useQuery({ queryKey: ['services'], queryFn: servicesService.list, staleTime: 5*60_000 })
   return (<>
+    <SEO
+      title={ROUTE_METADATA.home.title}
+      description={ROUTE_METADATA.home.description}
+      canonical={ROUTE_METADATA.home.canonicalPath}
+      keywords={ROUTE_METADATA.home.keywords}
+      schema={getProfessionalServiceSchema()}
+    />
     <section className="mx-auto max-w-6xl px-4 py-20">
       <h1 className="max-w-3xl text-4xl font-bold sm:text-6xl">Software that holds up when someone tries to break it.</h1>
       <p className="mt-6 max-w-xl text-lg text-muted">I build web applications, APIs and databases for businesses, and audit them for security before attackers do. Prices are listed up front.</p>

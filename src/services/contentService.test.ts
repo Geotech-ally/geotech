@@ -12,6 +12,7 @@ function queryWithResult(result: unknown) {
   query.select = vi.fn(() => query)
   query.eq = vi.fn(() => query)
   query.order = vi.fn()
+  query.limit = vi.fn(() => query)
   query.maybeSingle = vi.fn().mockResolvedValue(result)
   query.order.mockImplementation(() => query)
   Object.defineProperty(query, 'then', { value: (resolve: (value: unknown) => unknown) => resolve(result) })

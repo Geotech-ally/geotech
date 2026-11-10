@@ -18,3 +18,49 @@ Public writes (inquiries, client replies, upload URLs) go through the `public-ap
 See `supabase/functions/public-api/README.md` for rate-limit policies, fail-closed behavior, trusted client IP/CORS, transactional email notifications (Resend/provider secrets, sender/admin/domain config, templates, delivery tracking/retries/idempotency), and logging.
 Content tables are created by migrations `0002` (`projects`, `testimonials`) and `0003` (`blog_posts`). Public reads are limited by RLS to published rows; admins manage drafts through the dashboard. Project and blog-post slugs are unique; testimonials do not have slugs. Publishing a blog post sets `published_at` when it is empty.
 Attachments: private `attachments` bucket, 5 MB limit, PDF/PNG/JPG/TXT/DOCX only (enforced by the bucket itself).
+
+## Technical SEO & Production Deployment
+
+The site includes a complete, high-performance Technical SEO implementation:
+
+### 1. Production Domain Configuration
+Set `VITE_SITE_URL` in your frontend environment (e.g. Netlify/Vercel environment settings or `.env`):
+```bash
+VITE_SITE_URL=https://geotech.example.com
+```
+All canonical URLs, Open Graph images, Twitter cards, XML sitemap locations, and Schema.org structured data automatically inherit this origin.
+
+### 2. Prerendering (SSG) for Social Crawlers & Search Engines
+Because social crawlers (Facebook, LinkedIn, Twitter, WhatsApp, Slack, Telegram) do not execute JavaScript, the build script runs `scripts/prerender.js` after Vite finishes building:
+```bash
+npm run build
+```
+This automatically produces static `index.html` files for all eligible public routes in `dist/` (e.g. `dist/services/index.html`, `dist/about/index.html`, `dist/contact/index.html`, etc.) with route-specific `<title>`, `<meta name="description">`, `<link rel="canonical">`, Open Graph tags, and Schema.org JSON-LD.
+
+### 3. XML Sitemap & Robots.txt
+- `public/robots.txt`: Allows public routes, disallows private administration (`/admin*`) and confidential client conversations (`/c/*`), and references the sitemap.
+- `public/sitemap.xml`: Valid XML sitemap indexing all public routes (`/`, `/services`, `/projects`, `/insights`, `/about`, `/contact`, `/start`, and service slugs). Strictly excludes private admin and client portal paths.
+- Sitemap regeneration: Programmatically generated using `src/lib/sitemap.ts`.
+
+### 4. Application Identity & Social Sharing Assets
+The `public/` directory contains standard multi-resolution assets generated from the corporate brand identity:
+- `favicon.ico` (multi-resolution 16x16, 32x32, 48x48)
+- `favicon.svg` (SVG icon with adaptive light/dark mode styling)
+- `favicon-16x16.png` & `favicon-32x32.png`
+- `apple-touch-icon.png` (180x180)
+- `android-chrome-192x192.png` & `android-chrome-512x512.png`
+- `site.webmanifest` (PWA application identity)
+- `og-image.png` & `og-image.jpg` (1200x630 px Open Graph / Twitter Card social preview images)
+
+### 5. Private Route Protection & Defense-in-Depth Headers
+Private portals (`/admin/*` and `/c/*`) are protected with multiple layers:
+- Dynamic `<SEO noindex />` component applies `<meta name="robots" content="noindex, nofollow, noarchive" />`.
+- Server response headers in `netlify.toml` and `vercel.json` return `X-Robots-Tag: noindex, nofollow, noarchive`.
+- Excluded from `robots.txt` and `sitemap.xml`.
+
+### 6. Verification & Tests
+Run the SEO test suite covering all public metadata, admin exclusion, sitemap validity, robots.txt, and social preview assets:
+```bash
+npx vitest run src/tests/seo.test.ts
+```
+

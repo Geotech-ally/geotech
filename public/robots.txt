@@ -1,0 +1,20 @@
+# Robots.txt for Geotech (https://geotech.example.com)
+# Allow crawling of public business and informational pages
+User-agent: *
+Allow: /
+Allow: /services
+Allow: /services/
+Allow: /projects
+Allow: /insights
+Allow: /insights/
+Allow: /about
+Allow: /contact
+Allow: /start
+
+# Disallow private administration, authentication and client conversation portal
+Disallow: /admin
+Disallow: /admin/
+Disallow: /c/
+
+# Sitemap location
+Sitemap: https://geotech.example.com/sitemap.xml

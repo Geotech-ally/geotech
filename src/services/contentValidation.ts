@@ -55,7 +55,7 @@ const schemas = {
 }
 
 export type ContentTable = keyof typeof schemas
-export type ContentRow = Record<string, string | boolean | string[] | number | null>
+export type ContentRow = Record<string, unknown>
 
 export function validateContentRow(table: ContentTable, row: ContentRow): ContentRow {
   const parsed = schemas[table].safeParse(row)

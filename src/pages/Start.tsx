@@ -6,6 +6,8 @@ import type { ReactNode } from 'react'
 import { inquirySchema, type InquiryInput } from '../lib/schemas'
 import { inquiriesService } from '../services/inquiriesService'
 import { servicesService } from '../services/servicesService'
+import SEO from '../components/SEO'
+import { ROUTE_METADATA } from '../lib/seoConfig'
 const budgets = ['Under KSh 50,000','KSh 50,000 – 150,000','KSh 150,000 – 500,000','Above KSh 500,000','Not sure yet']
 const timelines = ['As soon as possible','Within 1 month','1–3 months','Flexible']
 const input = 'mt-1 w-full rounded border border-line bg-surface px-3 py-2'
@@ -19,8 +21,19 @@ export default function Start() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm<InquiryInput>({ resolver: zodResolver(inquirySchema), values: { service_id: pre } as InquiryInput })
   const m = useMutation({ mutationFn: inquiriesService.submit, onSuccess: () => reset() })
   if (m.isSuccess) return <div role="status" className="mx-auto max-w-xl px-4 py-20"><h1 className="text-3xl font-bold">Inquiry sent</h1><p className="mt-3 text-muted">Thanks. I'll review your project and reply by email within two working days.</p>{m.data && <p className="mt-4">Follow the conversation, add files and reply here: <Link className="font-semibold underline" to={`/c/${m.data}`}>open your conversation page</Link>. Bookmark it; the link is private to you.</p>}</div>
-  return (<div className="mx-auto max-w-2xl px-4 py-14"><title>Start a project — Geotech</title>
-    <h1 className="text-4xl font-bold">Start a project</h1>
+  return (
+    <div className="mx-auto max-w-2xl px-4 py-14">
+      <SEO
+        title={ROUTE_METADATA.start.title}
+        description={ROUTE_METADATA.start.description}
+        canonical={ROUTE_METADATA.start.canonicalPath}
+        keywords={ROUTE_METADATA.start.keywords}
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Start a Project', path: '/start' },
+        ]}
+      />
+      <h1 className="text-4xl font-bold">Start a project</h1>
     <form onSubmit={handleSubmit(v => m.mutate(v))} noValidate className="relative mt-8 grid gap-5">
       <F id="name" label="Full name" err={errors.name?.message}><input id="name" className={input} aria-describedby="name-e" aria-invalid={!!errors.name} {...register('name')}/></F>
       <F id="email" label="Email" err={errors.email?.message}><input id="email" type="email" className={input} aria-describedby="email-e" aria-invalid={!!errors.email} {...register('email')}/></F>

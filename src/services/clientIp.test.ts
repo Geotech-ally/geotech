@@ -7,7 +7,13 @@ import {
 } from '../lib/publicApiRateLimit'
 
 function h(entries: Record<string, string>) {
-  return new Headers(entries)
+  try {
+    return new Headers(entries)
+  } catch {
+    return {
+      get: (name: string) => entries[name.toLowerCase()] ?? null,
+    } as unknown as Headers
+  }
 }
 
 describe('IP parsing/validation', () => {

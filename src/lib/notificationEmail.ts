@@ -21,7 +21,7 @@ import {
   type NotificationEventType,
   type NotificationRequest,
   type NotificationStatus,
-} from './notifications.ts'
+} from './notifications'
 
 export {
   backoffSeconds,

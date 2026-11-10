@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="g-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0b0d17"/>
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="url(#g-grad)" stroke-width="2" stroke-opacity="0.6"/>
+  <!-- Modern Geometric 'G' shield / crest -->
+  <path d="M42 22 H24 A 12 12 0 0 0 12 34 A 12 12 0 0 0 24 46 H40 A 4 4 0 0 0 44 42 V34 H32 V28 H48 V42 A 10 10 0 0 1 38 52 H24 A 18 18 0 0 1 6 34 A 18 18 0 0 1 24 16 H42 Z" fill="url(#g-grad)"/>
+</svg>

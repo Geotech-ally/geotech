@@ -54,7 +54,7 @@ describe('email templates', () => {
     expect(msg.subject).toContain('ABCD1234')
     expect(msg.html).toContain('Ada Lovelace')
     expect(msg.html).toContain('https://site.test/admin')
-    expect(msg.text).toContain('Message content')
+    expect(msg.text).toContain('Private message content')
     expect(msg.html).not.toContain('project description body')
   })
 

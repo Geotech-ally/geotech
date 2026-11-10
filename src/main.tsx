@@ -19,9 +19,10 @@ import AdminServices from './pages/admin/AdminServices'
 import { InsightsList, InsightPost } from './pages/Insights'
 import ClientConversation from './pages/ClientConversation'
 import ContentEditor from './pages/admin/ContentEditor'
+import NotFound from './pages/NotFound'
 import './index.css'
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode><QueryClientProvider client={new QueryClient()}><BrowserRouter><Routes>
-    <Route element={<Layout/>}><Route index element={<Home/>}/><Route path="services" element={<Services/>}/><Route path="services/:slug" element={<ServiceDetail/>}/><Route path="start" element={<Start/>}/><Route path="contact" element={<Contact/>}/><Route path="projects" element={<Projects/>}/><Route path="about" element={<About/>}/><Route path="insights" element={<InsightsList/>}/><Route path="insights/:slug" element={<InsightPost/>}/><Route path="c/:token" element={<ClientConversation/>}/><Route path="admin/login" element={<Login/>}/><Route path="admin/reset-password" element={<ResetPassword/>}/></Route>
+    <Route element={<Layout/>}><Route index element={<Home/>}/><Route path="services" element={<Services/>}/><Route path="services/:slug" element={<ServiceDetail/>}/><Route path="start" element={<Start/>}/><Route path="contact" element={<Contact/>}/><Route path="projects" element={<Projects/>}/><Route path="about" element={<About/>}/><Route path="insights" element={<InsightsList/>}/><Route path="insights/:slug" element={<InsightPost/>}/><Route path="c/:token" element={<ClientConversation/>}/><Route path="admin/login" element={<Login/>}/><Route path="admin/reset-password" element={<ResetPassword/>}/><Route path="*" element={<NotFound/>}/></Route>
     <Route path="admin" element={<AdminLayout/>}><Route index element={<Inquiries/>}/><Route path="conversations" element={<Conversations/>}/><Route path="services" element={<AdminServices/>}/><Route path="content/:table" element={<ContentEditor/>}/></Route>
   </Routes></BrowserRouter></QueryClientProvider></React.StrictMode>)
