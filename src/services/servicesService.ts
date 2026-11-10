@@ -1,9 +1,9 @@
 import { supabase } from '../lib/supabase'
 import type { Service } from '../lib/money'
-const COLS = 'id,name,slug,short_description,description,category,starting_price,pricing_type,currency,estimated_duration,features,is_featured'
+const COLS = 'id,name,slug,short_description,description,category,starting_price,pricing_type,currency,estimated_duration,features,is_featured,display_order,icon,image_url'
 export const servicesService = {
   async list(): Promise<Service[]> {
-    const { data, error } = await supabase.from('services').select(COLS).eq('is_active',true).order('display_order')
+    const { data, error } = await supabase.from('services').select(COLS).eq('is_active', true).order('display_order', { ascending: true }).order('created_at', { ascending: false })
     if (error) throw error
     return data as Service[]
   },

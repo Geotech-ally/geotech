@@ -1,5 +1,22 @@
 export type PricingType = 'starting_from' | 'fixed' | 'hourly' | 'custom_quote'
-export interface Service { id:string; name:string; slug:string; short_description:string; description:string; category:string; starting_price:number|null; pricing_type:PricingType; currency:string; estimated_duration:string|null; features:string[]; is_featured:boolean }
+export interface Service {
+  id: string
+  name: string
+  slug: string
+  short_description: string
+  description: string
+  category: string
+  starting_price: number | null
+  pricing_type: PricingType
+  currency: string
+  estimated_duration: string | null
+  features: string[]
+  is_featured: boolean
+  is_active?: boolean
+  display_order?: number
+  icon?: string | null
+  image_url?: string | null
+}
 export function formatPrice(s: Pick<Service,'starting_price'|'pricing_type'|'currency'>): string {
   if (s.pricing_type === 'custom_quote' || s.starting_price == null) return 'Custom quote'
   const amt = new Intl.NumberFormat('en-KE',{maximumFractionDigits:0}).format(s.starting_price)

@@ -24,3 +24,28 @@ describe('content row validation against the content tables', () => {
     expect(validateContentRow('blog_posts', { title: 'Draft', slug: 'draft' }).body).toBe('')
   })
 })
+
+
+describe('company profile validation', () => {
+  it('accepts draft company profile content for administrator review', () => {
+    const row = validateContentRow('company_profile', {
+      company_name: 'Nexyvon Technologies',
+      introduction: 'Draft intro',
+      mission: 'Draft mission',
+      vision: 'Draft vision',
+      core_values: ['Quality'],
+      objectives: ['Deliver value'],
+      capabilities: ['Development'],
+      team: [{ name: 'Ada', role: 'Lead', bio: 'Bio', image_url: 'https://example.test/a.jpg' }],
+      contact: { email: 'info@example.test' },
+      is_published: false,
+    })
+    expect(row).toMatchObject({ company_name: 'Nexyvon Technologies', is_published: false, slug: 'default' })
+    expect(Array.isArray(row.core_values)).toBe(true)
+  })
+
+  it('requires a company name and rejects invalid structure', () => {
+    expect(() => validateContentRow('company_profile', { company_name: '', introduction: 'x' })).toThrow(/required fields/i)
+    expect(() => validateContentRow('company_profile', { company_name: 'Nexyvon', core_values: 'nope' as any })).toThrow(/required fields/i)
+  })
+})

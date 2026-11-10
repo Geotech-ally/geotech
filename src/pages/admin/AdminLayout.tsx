@@ -17,7 +17,7 @@ export default function AdminLayout() {
   return (<div className="mx-auto max-w-6xl px-4 py-6">
     <nav aria-label="Admin" className="flex flex-wrap items-center gap-5 border-b border-line pb-3">
       <Link to="/" className="font-display font-bold">Geotech admin</Link>
-      {[['/admin', 'Inquiries'], ['/admin/services', 'Services & pricing'], ['/admin/content/projects', 'Projects'], ['/admin/content/testimonials', 'Testimonials'], ['/admin/content/blog_posts', 'Blog']].map(([to, l]) => <NavLink key={to} to={to} end className={({ isActive }) => isActive ? 'font-semibold text-accent' : 'text-muted'}>{l}</NavLink>)}
+      {[['/admin', 'Inquiries'], ['/admin/conversations', 'Conversations'], ['/admin/services', 'Services & pricing'], ['/admin/content/company_profile', 'Company profile'], ['/admin/content/projects', 'Projects'], ['/admin/content/testimonials', 'Testimonials'], ['/admin/content/blog_posts', 'Blog']].map(([to, l]) => <NavLink key={to} to={to} end className={({ isActive }) => isActive ? 'font-semibold text-accent' : 'text-muted'}>{l}</NavLink>)}
       <button className="ml-auto cursor-pointer underline" onClick={async () => {
         setSignOutError('')
         try { await adminService.signOut(); qc.clear(); nav('/admin/login') }

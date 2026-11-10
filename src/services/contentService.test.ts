@@ -52,3 +52,13 @@ it('propagates query errors instead of turning them into empty lists', async () 
   queryWithResult({ data: null, error: failure })
   await expect(contentService.testimonials()).rejects.toBe(failure)
 })
+
+
+it('reads only the published company profile for the public About page', async () => {
+  const q = queryWithResult({ data: null, error: null })
+  await expect(contentService.companyProfile()).resolves.toBeNull()
+  expect(from).toHaveBeenCalledWith('company_profile')
+  expect(q.select).toHaveBeenCalledWith(expect.stringContaining('company_name'))
+  expect(q.eq).toHaveBeenCalledWith('is_published', true)
+  expect(q.maybeSingle).toHaveBeenCalledOnce()
+})

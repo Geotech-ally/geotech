@@ -1,9 +1,38 @@
 import { supabase } from '../lib/supabase'
 export interface Project { id:string; title:string; slug:string; summary:string; problem:string|null; solution:string|null; result:string|null; technologies:string[] }
 export interface Testimonial { id:string; author:string; role:string|null; quote:string }
+export interface CompanyProfile {
+  id: string
+  slug: string
+  company_name: string
+  introduction: string | null
+  background: string | null
+  mission: string | null
+  vision: string | null
+  core_values: string[]
+  objectives: string[]
+  capabilities: string[]
+  team: { name: string; role?: string | null; bio?: string | null; image_url?: string | null }[]
+  contact: { email?: string | null; phone?: string | null; whatsapp?: string | null; address?: string | null; website?: string | null; linkedin?: string | null; [k: string]: unknown }
+  hero_image_url: string | null
+  supporting_images: string[]
+  is_published: boolean
+}
+
 export const contentService = {
   async projects() { const { data, error } = await supabase.from('projects').select('id,title,slug,summary,problem,solution,result,technologies').eq('is_published', true).order('display_order').order('created_at', { ascending: false }); if (error) throw error; return data as Project[] },
   async testimonials() { const { data, error } = await supabase.from('testimonials').select('id,author,role,quote').eq('is_published', true).order('created_at', { ascending: false }); if (error) throw error; return data as Testimonial[] },
+  async companyProfile(): Promise<CompanyProfile | null> {
+    const { data, error } = await supabase
+      .from('company_profile')
+      .select('id,slug,company_name,introduction,background,mission,vision,core_values,objectives,capabilities,team,contact,hero_image_url,supporting_images,is_published')
+      .eq('is_published', true)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (error) throw error
+    return (data as CompanyProfile | null) ?? null
+  },
 }
 export interface PostSummary { id: string; title: string; slug: string; excerpt: string | null; published_at: string | null }
 export interface Post extends PostSummary { body: string }

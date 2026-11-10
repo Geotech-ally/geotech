@@ -10,6 +10,7 @@ const safeMessages: Record<string, string> = {
   invalid_request: 'Please check the request details and try again.',
   unsupported_action: 'This request is not supported.',
   rate_limited: 'Too many attempts. Please wait a few minutes and try again.',
+  service_unavailable: 'This service is temporarily unavailable. Please try again shortly.',
   submission_failed: 'We could not save your inquiry. Please try again shortly.',
   invalid_token: 'This conversation link is invalid or expired.',
   conversation_closed: 'This conversation is closed.',
@@ -30,9 +31,15 @@ async function safeServerMessage(data: unknown, error: unknown): Promise<string 
   return safeMessages[code]
 }
 
-export async function api<T = Record<string, never>>(action: string, payload: object = {}): Promise<T> {
+export async function api<T = Record<string, never>>(action: string, payload: object = {}, options: { admin?: boolean } = {}): Promise<T> {
   try {
-    const { data, error } = await supabase.functions.invoke('public-api', { body: { ...payload, action } })
+    const headers: Record<string, string> = {}
+    if (options.admin) {
+      const { data: session } = await supabase.auth.getSession()
+      const token = session?.session?.access_token
+      if (token) headers.Authorization = `Bearer ${token}`
+    }
+    const { data, error } = await supabase.functions.invoke('public-api', { body: { ...payload, action }, headers })
     if (error || !data || data.ok !== true) {
       const message = await safeServerMessage(data, error)
       throw new ApiError(message)

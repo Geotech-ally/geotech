@@ -21,3 +21,8 @@ it('hides transport and infrastructure details from the user', async () => {
   invoke.mockResolvedValue({ data: null, error: new Error('postgres host and internal credentials') })
   await expect(api('submit_inquiry', {})).rejects.toThrow('We could not complete your request. Please check your details and try again.')
 })
+
+it('maps a safe service_unavailable response to a user-safe message', async () => {
+  invoke.mockResolvedValue({ data: null, error: { context: new Response(JSON.stringify({ ok: false, error: { code: 'service_unavailable', message: 'redis internals' } }), { status: 503 }) } })
+  await expect(api('submit_inquiry', {})).rejects.toThrow('This service is temporarily unavailable. Please try again shortly.')
+})
